@@ -69,7 +69,13 @@ ___
 
 ### Create app.ts, create routes.ts and do a healthcheck
 ___
-1. Create an app.ts. Within this create a 
+1. Create an app.ts. Within this create a const app = express(). The express is imported from express.
+1. Use express.json() as a middleware to process form data that's in JSON.
+1. Create a port that is imported form config. 
+1. Create an async 'start' function within a try catch that connects to the database and then gets the app to listen to the port. Log the error. Then run the start function. 
+1. Create a routes.ts in the root folder.
+1. In the routes.ts create a routes function that is export defaulted. It should take in an "app" of type {Express} imported from "express".
+1. Within the routes function set the route to '/healthcheck', and create a function that takes in a req, res and returns res.sendStatus(200). 
 
 ### Create User
 ___
@@ -88,8 +94,10 @@ ___
 1. Make sure every function in the service is async and exported or the code will malfunction.
 1. Create a folder called controller and create a user.controller.ts within it. It will have just one function called createUserHandler. 
 1. This function takes a req: of type Request<{}, {}, UserInput> where the first is the params, the second is the response body and the third is the request body. Within a try, catch call the createUser function from user.service. If user then res.send(user). In the catch res.status(403).send(e). Export the createUserHandler and make sure it's an async function. Always await when the userModel has been called.
-1. Create a folder called schema and create a user.schema.ts. In it create a variable called createSessionSchema that takes an object imported from zod. The object has a body property which also takes an object. From it there is email, which is of string (imported from zod) which takes an object with required_error. Then a .email() with the error mentioned within. Also include a password property and export this.
+1. Create a folder called schema and create a user.schema.ts. In it create a variable called createSessionSchema that takes an object imported from zod. The object has a body property which also takes an object. From it there is email, which is of string (imported from zod) which takes an object with required_error. Then a .email() with the error mentioned within. Also include a name property, a password property, and a confirmPassword property. Then a refine method is attached to the object under the body property. This takes a function with data as input and the data.password === data.passwordConfirmation. The second input into the method is an object that mentions the error message as a message property and a path property that takes an array with one value of the path within i.e. ['passwordConfirmation']. Export default this schema.
 1. Create a folder called middleware and a file within called validateResource.ts. Create a validateResource function which takes schema of type AnyZodObject imported from Zod and that in turn takes a req, res, and next. Then within a try catch do schema.parse({}) the body, params, and query of req then return next. If catch, res.status(400).send(\`Error: ${e}`).
 1. Export default validateResource.
+1. In the routes file, mention the route to create user at '/api/v1/user' and with a post method add the middleware validateResoure(createUserSchema). The createUserSchema is imported from user.schema.ts from the schema folder. Then call the createUserHandler function.
+1. Test the route with thunderclient using a name, email, password and passwordConfirmation at the api endpoint.
 
 
