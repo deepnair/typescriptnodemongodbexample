@@ -31,6 +31,10 @@ ___
     ```
     yarn add @types/body-parser @types/config @types/cors @types/express @types/node @types/pino @types/mongoose @types/bcrypt @types/jsonwebtoken @types/lodash @types/nanoid ts-node-dev typescript -D
     ``` 
+1. Be sure to create the tsconfig.ts with the following terminal command:
+    ```
+    tsc --init
+    ```
 1. Start the database part by setting up the MongoDB server on Atlas (just google Mongodb Atlas). You can create a free account, and then start a basic database (should be free). 
 1. Make sure you make the access from anywhere option active in the Network access tab. Then go to the connect button on the homepage of atlas for the cluster and then click the connect your application option and copy the string where the option is Node.js. 
 1. Come to your developer folder mkdir and create a folder called config. Within it create a file called default.ts by using the touch default.ts command.
@@ -99,5 +103,22 @@ ___
 1. Export default validateResource.
 1. In the routes file, mention the route to create user at '/api/v1/user' and with a post method add the middleware validateResoure(createUserSchema). The createUserSchema is imported from user.schema.ts from the schema folder. Then call the createUserHandler function.
 1. Test the route with thunderclient using a name, email, password and passwordConfirmation at the api endpoint.
+
+### Create Session
+
+1. In the session model, create a session schema which will take a user of type mongoose.Schema.Types.ObjectId, with a ref of "User", also have a valid (boolean), userAgent (string). The valid can default to true.
+1. In the session service have a service to createSession, which returns a session.toJSON() from the session model. Have a findSessions which gets all the sessions that are valid of a particular user, have an updateSession which finds a session and updates it. 
+1. Have a reissueAccessToken function that takes in a refreshToken then checks for the validity of the refreshToken, then checks if the decoded object from the verification has a session associated with it.
+1. If the session exists and is valid, then find the user that is associated with that session using findUser (from user service).
+1. Finally sign a jwt with the user, and the sessionId and return the accessToken from the function.
+1. Ensure all the functions are exported from the service.
+1. In the controller, have a createUserSessionHandler. This checks the req.body using the validatePassword service from user service. Then if it is valid, create a session, then create an accessToken and a refreshToken with the user and session and send it in the response.
+1. Create a getSessionsHandler that finds the user form res.locals.user._id and uses the findSessions service from session service to find all valid sessions associated with the user.
+1. Create a deleteSessionsHandler that finds the session from the res.locals.user.session and uses the updateSession service to change the valid to false. Then res.send({accessToken: null, refreshToken: null}).
+1. Remember to export all the handlers.
+1. Create a session schema which will have a zod object which will basically take an email and a password. After the email property add a .email('You must put in a valid e-mail') so that the field is parsed for a valid e-mail.
+1. Create the route for session which will have an endpoint of 'api/v1/sessions'. This will take a post method to create a session, a get method for getting the valid sessions (this will have the requireUser middleware because you should only be able to get your sessions if you're a logged in user), a delete method for deleting the session (this will also have the requireUser middleware run since you need to be logged in to log out).
+
+
 
 
