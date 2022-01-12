@@ -105,7 +105,7 @@ ___
 1. Test the route with thunderclient using a name, email, password and passwordConfirmation at the api endpoint.
 
 ### Create Session
-
+___
 1. In the session model, create a session schema which will take a user of type mongoose.Schema.Types.ObjectId, with a ref of "User", also have a valid (boolean), userAgent (string). The valid can default to true.
 1. In the session service have a service to createSession, which returns a session.toJSON() from the session model. Have a findSessions which gets all the sessions that are valid of a particular user, have an updateSession which finds a session and updates it. 
 1. Have a reissueAccessToken function that takes in a refreshToken then checks for the validity of the refreshToken, then checks if the decoded object from the verification has a session associated with it.
@@ -118,6 +118,41 @@ ___
 1. Remember to export all the handlers.
 1. Create a session schema which will have a zod object which will basically take an email and a password. After the email property add a .email('You must put in a valid e-mail') so that the field is parsed for a valid e-mail.
 1. Create the route for session which will have an endpoint of 'api/v1/sessions'. This will take a post method to create a session, a get method for getting the valid sessions (this will have the requireUser middleware because you should only be able to get your sessions if you're a logged in user), a delete method for deleting the session (this will also have the requireUser middleware run since you need to be logged in to log out).
+
+### Create middleware
+1. One should only be allowed to access certain parts of the site if they're logged in. To protect these we'll create a deserializeUser and a requireUser middleware.
+1. A middleware folder is created. Within it a deserializeUser.ts is created.
+1. This will have a deserialize user function, which will be export defaulted at the end. 
+1. The function takes a req, res and next of type Request, Response, and NextFunction respectively all from "express".
+1. Access token is to be got from the request.headers.Authorization after replacing the "Bearer " at the beginning.
+1. Refresh token is to got from the request.headers.x-refresh.
+1. If there's no accessToken return next(). If there's an accessToken verify it and find both the user it belongs to and the expired bit.
+1. If the user is decoded, then res.locals.user = user and then return next().
+1. If expired is true and there's a refreshToken, verify the refreshToken and find the user.
+1. Create a newAccessToken using the reIssueAccessToken from the session service.
+1. res.setHeader() to x-access-token the new accessToken.Find the user of the new accessToken and assign it to res.locals.user. Finally return next().
+1. If the refreshToken is not there either, it should still go to next so in the outermost part return next() again.
+1. Next create a requireUser.ts in middleware.
+1. This has a requireUser function which will be export defaulted at the end. 
+1. This takes in a req, res and next of type Request, Response, and NextFunction respectively from "express".
+1. This checks if there is a user in res.locals.user. If there is it returns next() else on error it is to send a res.status(403).send('You are not authorized to access this page').
+1. Create a validateResource.ts in the middleware folder.
+1. This will have a validateResource function which will be export defaulted at the end.
+1. This takes schema of AnyZodObject. Then in the nested function it takes in a req, res and next of type Request, Response, and NextFunction respectively from "express".
+1. Within a try, catch. Schema.parse and set body: req.body, params: req.params, query: req.query. Then return next().
+1. In the catch return a res.status(400).send(e.message) 
+
+### Create Product
+___
+1. Create the product model with a product schema that will have a user which will again be of type mongoose.Schema.Types.ObjectId with a ref of "User".
+1. The remaining properties will be a title, description, image, and price. Everything will be a string except price which would be a number.
+1. timestamps will be true like all other schema in the project.
+1. Mention the type, put the schema in the model and export default the model.
+1. In the product service create a createProduct, getProduct, updateProduct and deleteProduct services. Corresponding handlers will be created in the product controller.
+1. For the getProduct service use a FilterQuery of type ProductDocument, and in the updateProduct service use a FilterQuery of type ProductDocument as well as an UpdateQuery of type ProductDocument. For the update product service be sure to include the {new: true} option or create an options of type QueryOptions and then put that when the Handler calls the service.
+1. In the updateProductHandler and the deleteProductHandler be sure to see if the product they're trying to update or delete exists then check to ensure that the user is the same as the creator of the user. Ensure that only the user who created the product can update or delete the product.
+1. In the schema for this create a bodySchema and a paramsSchema and spread them in the object within each of create, get, update and delete product schemas. 
+1. Finally create the routes for this and test them with Thunder client. 
 
 
 
