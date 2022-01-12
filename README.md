@@ -120,6 +120,7 @@ ___
 1. Create the route for session which will have an endpoint of 'api/v1/sessions'. This will take a post method to create a session, a get method for getting the valid sessions (this will have the requireUser middleware because you should only be able to get your sessions if you're a logged in user), a delete method for deleting the session (this will also have the requireUser middleware run since you need to be logged in to log out).
 
 ### Create middleware
+___
 1. One should only be allowed to access certain parts of the site if they're logged in. To protect these we'll create a deserializeUser and a requireUser middleware.
 1. A middleware folder is created. Within it a deserializeUser.ts is created.
 1. This will have a deserialize user function, which will be export defaulted at the end. 
