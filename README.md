@@ -25,11 +25,11 @@ ___
 1. Cd into the folder and then use npm init -y to create a package.json for your node environment.
 1. Then run the following commands to install all the necessary packages for the node express mongoDB server
     ```
-    yarn add express zod config cors express mongoose pino pino-pretty dayjs bcrypt jsonwebtoken lodash nanoid
+    yarn add express zod config cors mongoose pino pino-pretty dayjs bcrypt jsonwebtoken lodash nanoid
     ```
     Then run the following to add the developer dependencies and the types for those packages
     ```
-    yarn add @types/body-parser @types/config @types/cors @types/express @types/node @types/pino @types/mongoose @types/bcrypt @types/jsonwebtoken @types/lodash @types/nanoid ts-node-dev typescript -D
+    yarn add @types/body-parser @types/config @types/cors @types/express @types/node @types/pino @types/mongoose @types/bcrypt @types/jsonwebtoken @types/lodash @types/nanoid ts-node-dev nodemon typescript -D
     ``` 
 1. Be sure to create the tsconfig.ts with the following terminal command:
     ```
@@ -51,7 +51,7 @@ ___
     ```
     Then run:
     ```
-    openssl rsa -in private.pem pubout -out public.pem
+    openssl rsa -in private.pem -pubout -out public.pem
     ```
     This will create two files a private.pem which will have your privateKey and a public.pem which will have your private key. You'll need this to generate and verify your jason web tokens respectively.
 1. Copy the private key and put it as a property within the object exported from the default.ts file in the config folder. Do the same with the public key and then delete the private.pem and the public.pem files.
