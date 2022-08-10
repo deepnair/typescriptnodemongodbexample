@@ -75,7 +75,7 @@ ___
 ___
 1. Create an app.ts. Within this create a const app = express(). The express is imported from express.
 1. Use express.json() as a middleware to process form data that's in JSON.
-1. Create a port that is imported form config. 
+1. Create a port that is imported from config. 
 1. Create an async 'start' function within a try catch that connects to the database and then gets the app to listen to the port. Log the error. Then run the start function. 
 1. Create a routes.ts in the root folder.
 1. In the routes.ts create a routes function that is export defaulted. It should take in an "app" of type {Express} imported from "express".
