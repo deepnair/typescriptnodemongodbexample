@@ -125,8 +125,8 @@ ___
 1. A middleware folder is created. Within it a deserializeUser.ts is created.
 1. This will have a deserialize user function, which will be export defaulted at the end. 
 1. The function takes a req, res and next of type Request, Response, and NextFunction respectively all from "express".
-1. Access token is to be got from the request.headers.Authorization after replacing the "Bearer " at the beginning.
-1. Refresh token is to got from the request.headers.x-refresh.
+1. We get access token from the request.headers.Authorization after replacing the "Bearer " at the beginning.
+1. We get refresh token from the request.headers.x-refresh.
 1. If there's no accessToken return next(). If there's an accessToken verify it and find both the user it belongs to and the expired bit.
 1. If the user is decoded, then res.locals.user = user and then return next().
 1. If expired is true and there's a refreshToken, verify the refreshToken and find the user.
